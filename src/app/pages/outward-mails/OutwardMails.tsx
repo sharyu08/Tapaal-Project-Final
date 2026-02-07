@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import { outwardMailService } from '../../../services/outward-mail-service';
+import { apiService } from '../../../services/api-service';
 
 interface OutwardMailsProps {
   onViewMail?: (mail: any) => void;
@@ -46,7 +46,7 @@ export function OutwardMails({ onViewMail, onEditMail, onCreateMail }: OutwardMa
     const fetchMails = async () => {
       setLoading(true);
       try {
-        const response = await outwardMailService.getOutwardMails();
+        const response = await apiService.getOutwardMails();
         setOutwardMails(response.data || []);
       } catch (error) {
         setError(error.message);
