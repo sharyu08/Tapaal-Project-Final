@@ -13,12 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table';
-import { inwardMailService } from '../../../services/inward-mail-service.js';
-import { outwardMailService } from '../../../services/outward-mail-service.js';
-
-// Type assertions for the imported services
-const inwardService = inwardMailService as any;
-const outwardService = outwardMailService as any;
+import { apiService } from '../../../services/api-service';
 
 interface TrackingHistory {
   id: string;
@@ -77,8 +72,8 @@ export function Tracking() {
 
       // Fetch both inward and outward mails
       const [inwardResponse, outwardResponse] = await Promise.all([
-        inwardService.getInwardMails(),
-        outwardService.getOutwardMails()
+        apiService.getInwardMails(),
+        apiService.getOutwardMails()
       ]);
 
       if (inwardResponse.success && outwardResponse.success) {
