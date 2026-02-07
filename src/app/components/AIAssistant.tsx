@@ -36,12 +36,46 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
     const [message, setMessage] = useState('');
     const [conversation, setConversation] = useState<ChatMessage[]>([]);
     const [isTyping, setIsTyping] = useState(false);
+    const [language, setLanguage] = useState<'hi' | 'en'>('hi'); // Default Hindi
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [conversation, isTyping]);
+
+        // Auto-greeting when chatbot opens
+        if (isOpen && conversation.length === 0) {
+            const sendAutoGreeting = async () => {
+                try {
+                    try {
+                        const response = await fetch('http://localhost:5000/api/chatbot/', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: language === 'hi' ? 'नमस्ते' : 'hello' })
+                        });
+
+                        const data = await response.json();
+
+                        const aiMsg: ChatMessage = {
+                            type: 'assistant',
+                            text: data.reply,
+                            timestamp: new Date().toISOString()
+                        };
+
+                        setConversation(prev => [...prev, aiMsg]);
+                    } catch (error) {
+                        console.error('Auto-greeting error:', error);
+                    }
+                } catch (error) {
+                    console.error('Auto-greeting error:', error);
+                }
+            };
+
+            // Send greeting after a short delay
+            const timer = setTimeout(sendAutoGreeting, 1000);
+            return () => clearTimeout(timer);
+        }
+    }, [conversation, isOpen]);
 
     // ✅ AI MESSAGE HANDLER
     const handleSendMessage = async () => {
@@ -59,7 +93,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
         setIsTyping(true);
 
         try {
-            const response = await fetch('http://localhost:5000/api/chatbot/chat', {
+            const response = await fetch('http://localhost:5000/api/chatbot/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -75,7 +109,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
 
             const aiMsg: ChatMessage = {
                 type: 'assistant',
-                text: data.response,
+                text: data.reply,
                 timestamp: new Date().toISOString()
             };
 
@@ -108,14 +142,37 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
     };
 
     const quickActions = [
-        { icon: BarChart3, label: t('aiAssistant.statistics'), message: 'Show system statistics' },
-        { icon: Mail, label: t('aiAssistant.trackMail'), message: 'Track mail status' },
-        { icon: Users, label: t('aiAssistant.users'), message: 'Show users list' },
-        { icon: HelpCircle, label: t('aiAssistant.help'), message: 'Help me' }
+        { icon: BarChart3, label: language === 'hi' ? 'आंकड़े देखें' : 'Show system statistics', message: language === 'hi' ? 'वर्तमान देखें' : 'Show system statistics' },
+        { icon: Mail, label: language === 'hi' ? 'मेल ट्रैक करें' : 'Track mail status', message: language === 'hi' ? 'ट्रैकिंग स्थिति जांच' : 'Track mail status' },
+        { icon: Users, label: language === 'hi' ? 'उपयोगकर्ता' : 'Users', message: language === 'hi' ? 'उपयोगकर्ताओं की जानकारी' : 'Show users list' },
+        { icon: HelpCircle, label: language === 'hi' ? 'मददता' : 'Help', message: language === 'hi' ? 'कोई सवाल' : 'Help me' }
     ];
 
+    // Handle quick action clicks
+    const handleQuickAction = async (actionMessage: string) => {
+        try {
+            const response = await fetch('http://localhost:5000/api/chatbot/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: actionMessage })
+            });
+
+            const data = await response.json();
+
+            const aiMsg: ChatMessage = {
+                type: 'assistant',
+                text: data.reply,
+                timestamp: new Date().toISOString()
+            };
+
+            setConversation(prev => [...prev, aiMsg]);
+        } catch (error) {
+            console.error('Quick action error:', error);
+        }
+    };
+
     const formatMessage = (text: string) =>
-        text.split('\n').map((line, i) => <div key={i}>{line}</div>);
+        text ? text.split('\n').map((line, i) => <div key={i}>{line}</div>) : null;
 
     // 🔘 Floating Button
     if (!isOpen) {
@@ -144,6 +201,10 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
                         </div>
                     </div>
                     <div className="flex gap-1">
+                        {/* Language Toggle */}
+                        <Button size="sm" variant="ghost" onClick={() => setLanguage(language === 'hi' ? 'en' : 'hi')}>
+                            {language === 'hi' ? ' HI' : ' EN'}
+                        </Button>
                         <Button size="sm" variant="ghost" onClick={refreshChat}>
                             <RefreshCw className="w-4 h-4" />
                         </Button>
@@ -179,7 +240,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
                                 </p>
                                 <div className="grid grid-cols-2 gap-2">
                                     {quickActions.map((a, i) => (
-                                        <Button key={i} size="sm" variant="outline" onClick={() => setMessage(a.message)}>
+                                        <Button key={i} size="sm" variant="outline" onClick={() => handleQuickAction(a.message)}>
                                             <a.icon className="w-3 h-3 mr-1" /> {a.label}
                                         </Button>
                                     ))}
@@ -214,7 +275,7 @@ export const AIAssistant: React.FC<AIAssistantProps> = () => {
                             value={message}
                             onChange={e => setMessage(e.target.value)}
                             onKeyDown={handleKeyPress}
-                            placeholder={t('aiAssistant.placeholder')}
+                            placeholder={language === 'hi' ? 'कोई प्रश्न लिखें...' : 'Type your message...'}
                             disabled={isTyping}
                         />
                         <Button onClick={handleSendMessage} disabled={!message.trim() || isTyping}>
