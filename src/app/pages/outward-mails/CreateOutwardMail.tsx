@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input, Textarea, Button, Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Label } from '../../components/ui';
 import { ArrowLeft, Save, UploadCloud, Calendar, User, Building, MapPin, DollarSign, Globe } from 'lucide-react';
-import { outwardMailService } from '../../../services/outward-mail-service';
+import { apiService } from '../../../services/api-service';
 
 interface CreateOutwardMailProps {
   onBack: () => void;
@@ -96,30 +96,32 @@ export function CreateOutwardMail({ onBack, onRefresh }: CreateOutwardMailProps)
     });
 
     try {
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append('sentBy', sentBy);
-      formData.append('receiver', receiver);
-      formData.append('receiverAddress', receiverAddress);
-      formData.append('subject', subject);
-      formData.append('details', details);
-      formData.append('referenceDetails', referenceNumber);
-      formData.append('priority', priority);
-      formData.append('department', department);
-      formData.append('status', 'pending');
-      formData.append('deliveryMode', deliveryMode);
-      formData.append('date', sentDate || new Date().toISOString().slice(0, 10));
-      formData.append('dueDate', dueDate);
-      formData.append('cost', (parseFloat(cost) || 0).toString());
+      // Create JSON data for serverless environment
+      const mailData = {
+        sentBy: sentBy,
+        receiver: receiver,
+        receiverAddress: receiverAddress,
+        subject: subject,
+        details: details,
+        referenceDetails: referenceNumber,
+        priority: priority,
+        department: department,
+        status: 'pending',
+        deliveryMode: deliveryMode,
+        date: sentDate || new Date().toISOString().slice(0, 10),
+        dueDate: dueDate,
+        cost: parseFloat(cost) || 0,
+        attachments: attachedFiles.map(file => ({
+          filename: file.name,
+          originalName: file.name,
+          size: file.size,
+          mimetype: file.type || 'application/octet-stream'
+        }))
+      };
 
-      // Append files
-      attachedFiles.forEach((file, index) => {
-        formData.append(`attachments`, file);
-      });
+      console.log('📤 Sending to API:', mailData);
 
-      console.log('📤 Sending to API:', Object.fromEntries(formData));
-
-      const response = await outwardMailService.createOutwardMail(formData, attachedFiles);
+      const response = await apiService.createOutwardMail(mailData);
 
       console.log('📥 API Response:', response);
 
