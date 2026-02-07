@@ -63,7 +63,22 @@ export interface PieChartProps {
 }
 
 export function PieChart({ data, className, size = 200, dataKey }: PieChartProps) {
+    // Return early if no data or empty data
+    if (!data || !data.length || data.every(item => !(dataKey ? (item as any)[dataKey] : item.value))) {
+        return <div className={cn('flex items-center justify-center text-gray-400', className)} style={{ width: size, height: size }}>
+            No data
+        </div>;
+    }
+
     const total = data.reduce((sum, item) => sum + (dataKey ? (item as any)[dataKey] : item.value), 0);
+
+    // Return early if total is 0 or invalid
+    if (total <= 0 || !isFinite(total)) {
+        return <div className={cn('flex items-center justify-center text-gray-400', className)} style={{ width: size, height: size }}>
+            No data
+        </div>;
+    }
+
     const colors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'];
     let cumulativePercent = 0;
 
@@ -80,11 +95,20 @@ export function PieChart({ data, className, size = 200, dataKey }: PieChartProps
                 <svg viewBox="-1 -1 2 2" className="transform -rotate-90 w-full h-full">
                     {data.map((item, index) => {
                         const value = dataKey ? (item as any)[dataKey] : item.value;
+
+                        // Skip invalid values
+                        if (!value || !isFinite(value)) return null;
+
                         const percent = value / total;
                         const [startX, startY] = getCoordinatesForPercent(cumulativePercent);
                         cumulativePercent += percent;
                         const [endX, endY] = getCoordinatesForPercent(cumulativePercent);
                         const largeArcFlag = percent > 0.5 ? 1 : 0;
+
+                        // Ensure coordinates are valid numbers
+                        if (!isFinite(startX) || !isFinite(startY) || !isFinite(endX) || !isFinite(endY)) {
+                            return null;
+                        }
 
                         const pathData = [
                             `M ${startX} ${startY}`,
@@ -113,12 +137,17 @@ export function PieChart({ data, className, size = 200, dataKey }: PieChartProps
             </div>
 
             <div className="flex flex-col gap-2">
-                {data.map((item, index) => (
-                    <div key={index} className="flex items-center gap-2">
-                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color || colors[index % colors.length] }} />
-                        <span className="text-xs font-medium text-gray-600">{item.name}: {dataKey ? (item as any)[dataKey] : item.value}</span>
-                    </div>
-                ))}
+                {data.map((item, index) => {
+                    const value = dataKey ? (item as any)[dataKey] : item.value;
+                    if (!value || !isFinite(value)) return null;
+
+                    return (
+                        <div key={index} className="flex items-center gap-2">
+                            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color || colors[index % colors.length] }} />
+                            <span className="text-xs font-medium text-gray-600">{item.name}: {value}</span>
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );
@@ -126,9 +155,16 @@ export function PieChart({ data, className, size = 200, dataKey }: PieChartProps
 
 // --- LINE CHART ---
 export function LineChart({ data, className, height = 200 }: { data: any[], className?: string, height?: number }) {
-    const maxValue = Math.max(...data.map(d => d.value), 1);
-    const points = data.map((d, i) => {
-        const x = (i / (data.length - 1)) * 100;
+    if (!data || !data.length || data.every(d => !d.value || !isFinite(d.value))) {
+        return <div className={cn('flex items-center justify-center text-gray-400', className)} style={{ height }}>
+            No data
+        </div>;
+    }
+
+    const validData = data.filter(d => d.value && isFinite(d.value));
+    const maxValue = Math.max(...validData.map(d => d.value), 1);
+    const points = validData.map((d, i) => {
+        const x = (i / (validData.length - 1)) * 100;
         const y = 100 - (d.value / maxValue) * 100;
         return `${x},${y}`;
     }).join(' ');
@@ -144,10 +180,10 @@ export function LineChart({ data, className, height = 200 }: { data: any[], clas
                     strokeLinecap="round"
                     points={points}
                 />
-                {data.map((d, i) => (
+                {validData.map((d, i) => (
                     <circle
                         key={i}
-                        cx={(i / (data.length - 1)) * 100}
+                        cx={(i / (validData.length - 1)) * 100}
                         cy={100 - (d.value / maxValue) * 100}
                         r="3"
                         fill="white"
