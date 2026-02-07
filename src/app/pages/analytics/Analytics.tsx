@@ -7,13 +7,7 @@ import { Button } from '../../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { BarChart, PieChart, ResponsiveContainer, LineChart } from '../../components/ui/charts';
 import { cn } from '../../components/ui/utils';
-import { inwardMailService } from '../../../services/inward-mail-service.js';
-import { outwardMailService } from '../../../services/outward-mail-service.js';
-import { userService } from '../../../services/user-service.js';
-
-// Type assertions for the imported services
-const inwardService = inwardMailService as any;
-const outwardService = outwardMailService as any;
+import { apiService } from '../../../services/api-service';
 
 export default function Analytics() {
     const { t } = useTranslation();
@@ -37,9 +31,9 @@ export default function Analytics() {
 
             // Fetch data from multiple sources
             const [inwardResponse, outwardResponse, usersResponse] = await Promise.all([
-                inwardService.getInwardMails(),
-                outwardService.getOutwardMails(),
-                userService.getUsers()
+                apiService.getInwardMails(),
+                apiService.getOutwardMails(),
+                apiService.getUsers()
             ]);
 
             if (inwardResponse.success && outwardResponse.success && usersResponse.success) {
