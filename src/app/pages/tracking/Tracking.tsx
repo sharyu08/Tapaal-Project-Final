@@ -21,6 +21,7 @@ interface TrackingHistory {
   mailType: string;
   subject: string;
   sender: string;
+  receiver: string;
   currentStatus: string;
   priority: string;
   department: string;
@@ -82,27 +83,34 @@ export function Tracking() {
 
         // Combine and format tracking data
         const allMails = [...inwardMails, ...outwardMails];
-        const trackingData: TrackingHistory[] = allMails.map((mail, index) => ({
-          id: `TRK-${index + 1}`,
-          mailId: mail.id || mail._id,
-          mailType: mail.type || 'INWARD',
-          subject: mail.details || mail.subject,
-          sender: mail.type === 'INWARD' ? mail.sender : mail.senderName || mail.receiver,
-          currentStatus: mail.status,
-          priority: mail.priority || 'Normal',
-          department: mail.department,
-          assignedTo: mail.type === 'INWARD' ? 'Department Head' : 'Recipient',
-          createdAt: mail.createdAt || new Date().toISOString(),
-          lastUpdated: mail.updatedAt || new Date().toISOString(),
-          timeline: [
-            {
-              status: mail.status,
-              timestamp: new Date().toISOString(),
-              user: 'System',
-              remarks: `${mail.type || 'INWARD'} mail processed`
-            }
-          ]
-        }));
+        const trackingData: TrackingHistory[] = allMails.map((mail, index) => {
+          // Determine mail type based on available fields
+          const isInward = mail.sender !== undefined || mail.receivedBy !== undefined || mail.deliveryMode !== undefined;
+          const mailType = isInward ? 'INWARD' : 'OUTWARD';
+
+          return {
+            id: `TRK-${index + 1}`,
+            mailId: mail.id || mail._id,
+            mailType: mailType,
+            subject: mail.details || mail.subject || 'No Subject',
+            sender: isInward ? mail.sender : mail.sentBy || mail.receiver || 'Unknown',
+            receiver: isInward ? mail.receiver || 'Unknown' : mail.receiver || 'Unknown',
+            currentStatus: mail.status || 'pending',
+            priority: mail.priority || 'Normal',
+            department: mail.department || 'Unassigned',
+            assignedTo: isInward ? mail.receivedBy || 'Department Head' : mail.sentBy || 'Unknown',
+            createdAt: mail.createdAt || mail.date || new Date().toISOString(),
+            lastUpdated: mail.updatedAt || new Date().toISOString(),
+            timeline: [
+              {
+                status: mail.status || 'pending',
+                timestamp: mail.createdAt || mail.date || new Date().toISOString(),
+                user: 'System',
+                remarks: `${mailType} mail processed`
+              }
+            ]
+          };
+        });
 
         setTrackingHistory(trackingData);
       }
@@ -219,7 +227,7 @@ export function Tracking() {
                   <TableHead>{t('tracking.mailId')}</TableHead>
                   <TableHead>{t('tracking.type')}</TableHead>
                   <TableHead>{t('tracking.subject')}</TableHead>
-                  <TableHead>{t('tracking.sender')}</TableHead>
+                  <TableHead>{t('tracking.senderReceiver')}</TableHead>
                   <TableHead>{t('tracking.status')}</TableHead>
                   <TableHead>{t('tracking.priority')}</TableHead>
                   <TableHead>{t('tracking.department')}</TableHead>
@@ -237,7 +245,14 @@ export function Tracking() {
                       </Badge>
                     </TableCell>
                     <TableCell className="max-w-xs truncate">{item.subject}</TableCell>
-                    <TableCell>{item.sender}</TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <div className="font-medium">{item.sender}</div>
+                        {item.receiver && item.receiver !== 'Unknown' && (
+                          <div className="text-gray-500 text-xs">→ {item.receiver}</div>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Badge className={getStatusBadge(item.currentStatus)}>
                         {item.currentStatus}
