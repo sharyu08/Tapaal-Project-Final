@@ -216,22 +216,64 @@ export function CreateOutwardMail({ onBack }: CreateOutwardMailProps) {
         setShowDescriptionSuggestions(false);
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        console.log({
-            receiverName,
-            receiverAddress,
-            subject,
-            description,
-            department,
-            priority,
-            deliveryMode,
-            dueDate,
-            cost,
-            attachedFiles,
-        });
-        // Here you would typically send this data to a backend API
-        alert('Outward Mail Saved! Check console for details.');
+
+        const mailData = {
+            sentBy: 'System Admin',
+            receiver: receiverName,
+            receiverAddress: receiverAddress,
+            subject: subject,
+            details: description,
+            department: department,
+            priority: priority,
+            deliveryMode: deliveryMode,
+            date: new Date().toISOString().slice(0, 10),
+            dueDate: dueDate,
+            cost: cost,
+            attachments: attachedFiles.map(file => ({
+                filename: file.name,
+                originalName: file.name,
+                size: file.size,
+                mimetype: file.type || 'application/octet-stream'
+            }))
+        };
+
+        console.log('🚀 Starting outward mail submission...');
+        console.log('Form data:', mailData);
+        console.log('📤 Sending to API:', mailData);
+
+        try {
+            const response = await apiService.createOutwardMail(mailData);
+            console.log('📥 API Response:', response);
+
+            if (response.success) {
+                console.log('✅ Outward mail saved successfully!');
+                alert('Outward mail created successfully!');
+
+                // Clear form fields
+                setReceiverName('');
+                setReceiverAddress('');
+                setSubject('');
+                setDescription('');
+                setDepartment('');
+                setPriority('Normal');
+                setDeliveryMode('Courier');
+                setDueDate('');
+                setCost('');
+                setAttachedFiles([]);
+
+                if (onBack) {
+                    onBack();
+                }
+            } else {
+                console.log('❌ Failed to save outward mail:', response.message);
+                alert('Failed to create outward mail: ' + response.message);
+            }
+        } catch (error) {
+            console.error('💥 Error creating outward mail:', error);
+            alert('Error creating outward mail. Please try again.');
+        }
     };
 
     return (
