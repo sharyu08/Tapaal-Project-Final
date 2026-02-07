@@ -6,10 +6,7 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
-import { inwardMailService } from '../../../services/inward-mail-service.js';
-
-// Type assertion for the imported service
-const service = inwardMailService as any;
+import { apiService } from '../../../services/api-service';
 import {
   Table,
   TableBody,
@@ -53,7 +50,7 @@ export function InwardMails({ onViewMail, onEditMail, onCreateMail }: InwardMail
   const fetchInwardMails = async () => {
     try {
       setLoading(true);
-      const response = await service.getInwardMails({
+      const response = await apiService.getInwardMails({
         search: searchTerm,
         priority: selectedPriority !== 'all' ? selectedPriority : undefined,
         status: selectedStatus !== 'all' ? selectedStatus : undefined,
