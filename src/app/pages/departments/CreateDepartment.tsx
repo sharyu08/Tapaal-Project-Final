@@ -272,23 +272,14 @@ export function CreateDepartment({ onBack, onDepartmentCreated }: CreateDepartme
         };
 
         try {
-            // Call the API to create the department
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-            const response = await fetch(`${apiUrl}/departments`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(departmentData),
-            });
+            // Call the API service to create the department
+            const response = await apiService.createDepartment(departmentData);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to create department');
+            if (!response.success) {
+                throw new Error(response.message || 'Failed to create department');
             }
 
-            const result = await response.json();
-            console.log('Department created successfully:', result);
+            console.log('Department created successfully:', response);
 
             alert(t('createDepartment.success'));
 
