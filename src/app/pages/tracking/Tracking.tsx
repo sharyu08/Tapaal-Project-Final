@@ -136,7 +136,7 @@ export function Tracking() {
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 sm:p-6 max-w-6xl mx-auto h-full flex flex-col">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-gray-800">{t('tracking.title')}</h1>
@@ -208,8 +208,8 @@ export function Tracking() {
       </Card>
 
       {/* Tracking Table */}
-      <Card>
-        <div className="p-4">
+      <Card className="flex-1 min-h-0">
+        <div className="p-4 h-full flex flex-col">
           {loading ? (
             <div className="flex items-center justify-center py-8">
               <RefreshCw className="w-6 h-6 animate-spin text-blue-500" />
@@ -220,65 +220,67 @@ export function Tracking() {
               <p>{t('tracking.noRecords')}</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('tracking.trackingId')}</TableHead>
-                  <TableHead>{t('tracking.mailId')}</TableHead>
-                  <TableHead>{t('tracking.type')}</TableHead>
-                  <TableHead>{t('tracking.subject')}</TableHead>
-                  <TableHead>{t('tracking.senderReceiver')}</TableHead>
-                  <TableHead>{t('tracking.status')}</TableHead>
-                  <TableHead>{t('tracking.priority')}</TableHead>
-                  <TableHead>{t('tracking.department')}</TableHead>
-                  <TableHead>{t('tracking.actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredTracking.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.id}</TableCell>
-                    <TableCell>{item.mailId}</TableCell>
-                    <TableCell>
-                      <Badge className="bg-blue-100 text-blue-800">
-                        {item.mailType}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="max-w-xs truncate">{item.subject}</TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div className="font-medium">{item.sender}</div>
-                        {item.receiver && item.receiver !== 'Unknown' && (
-                          <div className="text-gray-500 text-xs">→ {item.receiver}</div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getStatusBadge(item.currentStatus)}>
-                        {item.currentStatus}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      <Badge className={getPriorityBadge(item.priority)}>
-                        {item.priority}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>{item.department}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => setSelectedTracking(item)}
-                        >
-                          <Eye className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            <div className="overflow-x-auto flex-1">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('tracking.trackingId')}</TableHead>
+                    <TableHead>{t('tracking.mailId')}</TableHead>
+                    <TableHead>{t('tracking.type')}</TableHead>
+                    <TableHead>{t('tracking.subject')}</TableHead>
+                    <TableHead>{t('tracking.senderReceiver')}</TableHead>
+                    <TableHead>{t('tracking.status')}</TableHead>
+                    <TableHead>{t('tracking.priority')}</TableHead>
+                    <TableHead>{t('tracking.department')}</TableHead>
+                    <TableHead>{t('tracking.actions')}</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredTracking.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">{item.id}</TableCell>
+                      <TableCell>{item.mailId}</TableCell>
+                      <TableCell>
+                        <Badge className="bg-blue-100 text-blue-800">
+                          {item.mailType}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="max-w-xs truncate">{item.subject}</TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div className="font-medium">{item.sender}</div>
+                          {item.receiver && item.receiver !== 'Unknown' && (
+                            <div className="text-gray-500 text-xs">→ {item.receiver}</div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getStatusBadge(item.currentStatus)}>
+                          {item.currentStatus}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge className={getPriorityBadge(item.priority)}>
+                          {item.priority}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{item.department}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedTracking(item)}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </div>
       </Card>

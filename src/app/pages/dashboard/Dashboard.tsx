@@ -142,7 +142,7 @@ export function Dashboard() {
   ] : fallbackSummaryData;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50 h-full">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
