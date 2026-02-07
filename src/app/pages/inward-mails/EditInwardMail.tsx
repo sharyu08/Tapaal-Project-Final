@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Input, Textarea, Button, Card, CardContent, CardHeader, CardTitle, Select, SelectContent, SelectItem, SelectTrigger, SelectValue, Label } from '../../components/ui';
 import { ArrowLeft, Save, UploadCloud, Calendar, User, Building } from 'lucide-react';
-import { inwardMailService } from '../../../services/inward-mail-service';
+import { apiService } from '../../../services/api-service';
 
 interface EditInwardMailProps {
   mailId: string;
@@ -35,12 +35,12 @@ export function EditInwardMail({ mailId, onBack, onSave }: EditInwardMailProps) 
   const fetchMailDetail = async () => {
     try {
       setLoading(true);
-      const response = await inwardMailService.getInwardMail(mailId);
-      
+      const response = await apiService.getInwardMail(mailId);
+
       if (response.success) {
         const mailData = response.data;
         setMail(mailData);
-        
+
         // Populate form fields
         setSenderName(mailData.sender || '');
         setSubject(mailData.details || '');
@@ -51,7 +51,7 @@ export function EditInwardMail({ mailId, onBack, onSave }: EditInwardMailProps) 
         setReferenceNumber(mailData.referenceDetails || '');
         setStatus(mailData.status || 'pending');
         setDeliveryMode(mailData.deliveryMode || 'Courier');
-        
+
         setError('');
       } else {
         setError('Failed to fetch mail details');
@@ -102,7 +102,7 @@ export function EditInwardMail({ mailId, onBack, onSave }: EditInwardMailProps) 
 
       console.log('📤 Updating mail:', mailData);
 
-      const response = await inwardMailService.updateInwardMail(mailId, mailData);
+      const response = await apiService.updateInwardMail(mailId, mailData);
 
       console.log('📥 Update Response:', response);
 

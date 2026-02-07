@@ -7,7 +7,7 @@ import { AIDuplicateAlert } from '../../components/ai/AIDuplicateAlert';
 import { AIPrioritySuggestion } from '../../components/ai/AIPrioritySuggestion';
 import { AIDescriptionSuggestions } from '../../components/ai/AIDescriptionSuggestions';
 import { AIContentSuggestions } from '../../components/ai/AIContentSuggestions';
-import { inwardMailService } from '../../../services/inward-mail-service';
+import { apiService } from '../../../services/api-service';
 
 interface CreateInwardMailProps {
     onBack?: () => void;
@@ -248,7 +248,7 @@ export function CreateInwardMail({ onBack }: CreateInwardMailProps) {
 
             console.log('📤 Sending to API:', Object.fromEntries(formData));
 
-            const response = await inwardMailService.createInwardMail(formData);
+            const response = await apiService.createInwardMail(formData);
 
             console.log('📥 API Response:', response);
 
