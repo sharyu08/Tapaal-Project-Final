@@ -148,11 +148,13 @@ class ApiService {
     return this.request<any>(`/inward-mails/${id}`);
   }
 
-  async createInwardMail(mailData: FormData): Promise<ApiResponse<any>> {
+  async createInwardMail(mailData: any): Promise<ApiResponse<any>> {
     return this.request<any>('/inward-mails', {
       method: 'POST',
-      body: mailData,
-      headers: {}, // Let browser set Content-Type for FormData
+      body: JSON.stringify(mailData),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
   }
 

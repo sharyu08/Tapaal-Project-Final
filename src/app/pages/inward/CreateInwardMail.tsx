@@ -229,26 +229,28 @@ export function CreateInwardMail({ onBack }: CreateInwardMailProps) {
         });
 
         try {
-            // Create FormData for file upload
-            const formData = new FormData();
-            formData.append('receivedBy', 'System Admin');
-            formData.append('handoverTo', 'System Admin');
-            formData.append('sender', senderName);
-            formData.append('deliveryMode', 'Courier');
-            formData.append('details', description);
-            formData.append('referenceDetails', referenceNumber);
-            formData.append('priority', priority);
-            formData.append('department', department);
-            formData.append('date', receivedDate || new Date().toISOString().slice(0, 10));
+            // Create JSON data for serverless environment
+            const mailData = {
+                receivedBy: 'System Admin',
+                handoverTo: 'System Admin',
+                sender: senderName,
+                deliveryMode: 'Courier',
+                details: description,
+                referenceDetails: referenceNumber,
+                priority: priority,
+                department: department,
+                date: receivedDate || new Date().toISOString().slice(0, 10),
+                attachments: attachedFiles.map(file => ({
+                    filename: file.name,
+                    originalName: file.name,
+                    size: file.size,
+                    mimetype: file.type || 'application/octet-stream'
+                }))
+            };
 
-            // Append files
-            attachedFiles.forEach((file, index) => {
-                formData.append(`file${index}`, file);
-            });
+            console.log('📤 Sending to API:', mailData);
 
-            console.log('📤 Sending to API:', Object.fromEntries(formData));
-
-            const response = await apiService.createInwardMail(formData);
+            const response = await apiService.createInwardMail(mailData);
 
             console.log('📥 API Response:', response);
 
