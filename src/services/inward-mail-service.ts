@@ -40,7 +40,7 @@ export class InwardMailService {
 
   // Get file download URL
   getFileUrl(filename: string, type: string = 'inward'): string {
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tapaal-backend.vercel.app';
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tapaal-backend.onrender.com';
     return `${baseUrl}/uploads/${type}/${filename}`;
   }
 }

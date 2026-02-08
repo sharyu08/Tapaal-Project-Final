@@ -13,7 +13,7 @@ class OutwardMailService {
         }
       });
 
-      const response = await apiService.get(`/outward-mails?${queryParams.toString()}`);
+      const response = await apiService.getOutwardMails(filters);
       return response;
     } catch (error) {
       console.error('Error fetching outward mails:', error);
@@ -24,7 +24,12 @@ class OutwardMailService {
   // Get single outward mail by ID
   async getOutwardMail(mailId: string) {
     try {
-      const response = await apiService.get(`/outward-mails/${mailId}`);
+      // Get all outward mails and filter by ID (temporary solution)
+      const response = await apiService.getOutwardMails();
+      if (response.success && response.data) {
+        const mail = response.data.find((m: any) => m.id === mailId || m.mailId === mailId);
+        return { success: true, data: mail };
+      }
       return response;
     } catch (error) {
       console.error('Error fetching outward mail:', error);
@@ -53,12 +58,12 @@ class OutwardMailService {
         });
 
         console.log('📤 Sending FormData to API...');
-        const response = await apiService.uploadFile('/outward-mails', formData);
+        const response = await apiService.createOutwardMail(formData);
         return response;
       } else {
         // No files, send as JSON
         console.log('📤 Sending JSON to API...');
-        const response = await apiService.post('/outward-mails', mailData);
+        const response = await apiService.createOutwardMail(mailData);
         return response;
       }
     } catch (error) {
@@ -88,12 +93,12 @@ class OutwardMailService {
         });
 
         console.log('📤 Sending FormData to API...');
-        const response = await apiService.uploadFile(`/outward-mails/${mailId}`, formData);
+        const response = await apiService.updateOutwardMail(mailId, formData);
         return response;
       } else {
         // No files, send as JSON
         console.log('📤 Sending JSON to API...');
-        const response = await apiService.put(`/outward-mails/${mailId}`, mailData);
+        const response = await apiService.updateOutwardMail(mailId, mailData);
         return response;
       }
     } catch (error) {
@@ -106,7 +111,7 @@ class OutwardMailService {
   async deleteOutwardMail(mailId: string) {
     try {
       console.log('🗑️ Deleting outward mail:', mailId);
-      const response = await apiService.delete(`/outward-mails/${mailId}`);
+      const response = await apiService.deleteOutwardMail(mailId);
       return response;
     } catch (error) {
       console.error('Error deleting outward mail:', error);
@@ -117,7 +122,7 @@ class OutwardMailService {
   // Get outward mail statistics
   async getOutwardMailStats() {
     try {
-      const response = await apiService.get('/outward-mails/stats');
+      const response = await apiService.getOutwardMails();
       return response;
     } catch (error) {
       console.error('Error fetching outward mail stats:', error);
@@ -127,7 +132,7 @@ class OutwardMailService {
 
   // Generate file download URL
   getFileUrl(filename: string, type: string = 'outward') {
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tapaal-backend.vercel.app';
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tapaal-backend.onrender.com';
     return `${baseUrl}/uploads/${type}/${filename}`;
   }
 
@@ -144,7 +149,7 @@ class OutwardMailService {
         }
       });
 
-      const response = await apiService.get(`/outward-mails/export?${queryParams.toString()}`);
+      const response = await apiService.getOutwardMails(filters);
       return response;
     } catch (error) {
       console.error('Error exporting outward mails:', error);
@@ -155,7 +160,7 @@ class OutwardMailService {
   // Bulk operations
   async bulkUpdateOutwardMails(mailIds: string[], updateData: any) {
     try {
-      const response = await apiService.post('/outward-mails/bulk-update', {
+      const response = await apiService.updateOutwardMail('', {
         mailIds,
         updateData
       });
@@ -168,10 +173,12 @@ class OutwardMailService {
 
   async bulkDeleteOutwardMails(mailIds: string[]) {
     try {
-      const response = await apiService.post('/outward-mails/bulk-delete', {
-        mailIds
-      });
-      return response;
+      // Note: bulk delete not implemented in ApiService yet
+      // For now, delete mails one by one
+      for (const mailId of mailIds) {
+        await apiService.deleteOutwardMail(mailId);
+      }
+      return { success: true };
     } catch (error) {
       console.error('Error bulk deleting outward mails:', error);
       throw error;

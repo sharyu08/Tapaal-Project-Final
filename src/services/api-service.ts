@@ -1,5 +1,5 @@
 // Real API service for connecting to backend
-const API_BASE_URL = (window as any).VITE_API_URL || import.meta.env.VITE_API_URL || 'https://tapaal-backend.vercel.app/api';
+const API_BASE_URL = (window as any).VITE_API_URL || import.meta.env.VITE_API_URL || 'https://tapaal-backend.onrender.com/api';
 
 export interface ApiResponse<T> {
   success: boolean;
