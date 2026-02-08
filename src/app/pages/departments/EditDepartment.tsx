@@ -57,7 +57,7 @@ export function EditDepartment({ onBack, departmentId, onDepartmentUpdated }: Ed
 
     const fetchDepartmentData = async () => {
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const apiUrl = import.meta.env.VITE_API_URL || 'https://tapaal-backend.vercel.app/api';
             const response = await fetch(`${apiUrl}/departments/${departmentId}`);
             if (response.ok) {
                 const data = await response.json();
@@ -255,7 +255,7 @@ export function EditDepartment({ onBack, departmentId, onDepartmentUpdated }: Ed
         try {
             setSaving(true);
             // Call the API to update the department
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+            const apiUrl = import.meta.env.VITE_API_URL || 'https://tapaal-backend.vercel.app/api';
             const response = await fetch(`${apiUrl}/departments/${departmentId}`, {
                 method: 'PUT',
                 headers: {

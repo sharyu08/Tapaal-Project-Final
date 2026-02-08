@@ -127,7 +127,7 @@ class OutwardMailService {
 
   // Generate file download URL
   getFileUrl(filename: string, type: string = 'outward') {
-    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+    const baseUrl = import.meta.env.VITE_API_URL?.replace('/api', '') || 'https://tapaal-backend.vercel.app';
     return `${baseUrl}/uploads/${type}/${filename}`;
   }
 

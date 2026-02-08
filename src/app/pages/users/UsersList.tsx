@@ -28,7 +28,7 @@ export function UsersList() {
   const fetchUsers = async () => {
     try {
       console.log('🔍 Fetching users from API...');
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://tapaal-backend.vercel.app/api';
       const response = await fetch(`${apiUrl}/users`);
       const data = await response.json();
 
