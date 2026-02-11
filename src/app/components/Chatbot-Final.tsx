@@ -127,10 +127,10 @@ export function Chatbot() {
 
     return (
         <div
-            className={`fixed bottom-6 right-6 z-50 transition-all duration-300 flex flex-col ${isMinimized ? 'w-80 h-14' : 'w-96 h-[500px]'} bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900`}
+            className={`fixed bottom-6 right-6 z-50 transition-all duration-300 flex flex-col ${isMinimized ? 'w-80 h-14' : 'w-96 h-[500px]'} bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl`}
         >
             {/* Header */}
-            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex items-center justify-between shadow-lg">
+            <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4 flex items-center justify-between shadow-lg rounded-t-2xl">
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2">
                         <Bot className="w-6 h-6 text-green-400" />
@@ -314,9 +314,7 @@ export function Chatbot() {
                             </div>
                         </div>
                 </div>
-        </>
-    )
-}
-        </div >
+                </>}
+        </div>
     );
 }

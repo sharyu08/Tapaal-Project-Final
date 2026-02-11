@@ -51,10 +51,11 @@ const AIAssistant: React.FC = () => {
                 setConversation([
                     {
                         type: "assistant",
-                        text: data.reply || "Hello! I am your Tapaal AI assistant.",
+                        text: data.response || data.reply || "Hello! I am your Tapaal AI assistant.",
                         timestamp: new Date().toISOString()
                     }
                 ]);
+
             } catch (err) {
                 console.error("Greeting failed:", err);
             }
@@ -66,49 +67,52 @@ const AIAssistant: React.FC = () => {
 
     // send message
     const handleSendMessage = async () => {
-        if (!message.trim()) return;
+    if (!message.trim()) return;
 
-        const userMsg: ChatMessage = {
-            type: "user",
-            text: message,
+    const userMsg: ChatMessage = {
+        type: "user",
+        text: message,
+        timestamp: new Date().toISOString()
+    };
+
+    setMessage("");
+    setIsTyping(true);
+
+    try {
+        const res = await fetch(API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message: userMsg.text })
+        });
+
+        const data = await res.json();
+
+        const aiMsg: ChatMessage = {
+            type: "assistant",
+            text: data.response || data.reply || "AI did not return a response.",
             timestamp: new Date().toISOString()
         };
 
-        setConversation(prev => [...prev, userMsg]);
-        setMessage("");
-        setIsTyping(true);
+        // ✅ Update both messages together
+        setConversation(prev => [...prev, userMsg, aiMsg]);
 
-        try {
-            const res = await fetch(API, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ message: userMsg.text })
-            });
-
-            const data = await res.json();
-
-            const aiMsg: ChatMessage = {
+    } catch (err) {
+        setConversation(prev => [
+            ...prev,
+            userMsg,
+            {
                 type: "assistant",
-                text: data.reply || "AI did not return a response.",
+                text: "⚠️ Unable to reach AI server.",
                 timestamp: new Date().toISOString()
-            };
+            }
+        ]);
+    } finally {
+        setIsTyping(false);
+    }
+};
 
-            setConversation(prev => [...prev, aiMsg]);
-        } catch (err) {
-            setConversation(prev => [
-                ...prev,
-                {
-                    type: "assistant",
-                    text: "⚠️ Unable to reach AI server. Please try again.",
-                    timestamp: new Date().toISOString()
-                }
-            ]);
-        } finally {
-            setIsTyping(false);
-        }
-    };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
         if (e.key === "Enter") {

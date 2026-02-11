@@ -142,98 +142,94 @@ export function Dashboard() {
   ] : fallbackSummaryData;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8 bg-gray-50 h-full">
+    <div className="p-3 sm:p-4 md:p-6 lg:p-8 w-full max-w-full space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8 bg-gray-50 h-full min-h-screen">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 tracking-tight">{t('dashboard.title')}</h1>
-          <p className="text-gray-500 mt-2 font-medium">{t('dashboard.subtitle')}</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-gray-500 mt-1 sm:mt-2 text-sm sm:text-base font-medium">{t('dashboard.subtitle')}</p>
         </div>
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-2 text-xs font-bold text-green-600 uppercase tracking-widest bg-green-50 px-3 py-1 rounded-full">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            {t('dashboard.liveFeed')}
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold text-green-600 uppercase tracking-widest bg-green-50 px-2 sm:px-3 py-1 rounded-full">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse" />
+            <span className="hidden xs:inline">{t('dashboard.liveFeed')}</span>
+            <span className="xs:hidden">Live</span>
           </span>
         </div>
       </div>
 
       {/* Status Message */}
       {message && (
-        <div className="p-4 sm:p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-lg">
-          {message}
+        <div className="p-3 sm:p-4 md:p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-lg">
+          <p className="text-sm sm:text-base">{message}</p>
         </div>
       )}
 
-      {/* Database Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      {/* Combined Stats Grid - 8 cards in 2x4 grid structure */}
+      <div className="grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+        {/* First Row - Database Stats Cards */}
         <Card className="shadow-lg border-0 bg-white rounded-xl hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600">{t('dashboard.totalUsers')}</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">{dbStats.users}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('dashboard.totalUsers')}</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{dbStats.users}</p>
               </div>
-              <Users className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600" />
+              <Users className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-purple-600 flex-shrink-0 ml-2" />
             </div>
           </CardContent>
         </Card>
         <Card className="shadow-lg border-0 bg-white rounded-xl hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600">{t('dashboard.departments')}</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">{dbStats.departments}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('dashboard.departments')}</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{dbStats.departments}</p>
               </div>
-              <Database className="w-8 h-8 sm:w-10 sm:h-10 text-blue-600" />
+              <Database className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-blue-600 flex-shrink-0 ml-2" />
             </div>
           </CardContent>
         </Card>
         <Card className="shadow-lg border-0 bg-white rounded-xl hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-4 sm:p-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs sm:text-sm font-medium text-gray-600">{t('dashboard.totalMails')}</p>
-                <p className="text-2xl sm:text-3xl font-bold text-gray-900">{dbStats.mails}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('dashboard.totalMails')}</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{dbStats.mails}</p>
               </div>
-              <Mail className="w-8 h-8 sm:w-10 sm:h-10 text-green-600" />
+              <Mail className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-green-600 flex-shrink-0 ml-2" />
             </div>
           </CardContent>
         </Card>
         <Card className="shadow-lg border-0 bg-white rounded-xl hover:shadow-xl transition-all duration-300">
-          <CardContent className="p-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
             <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">{t('dashboard.trackingEvents')}</p>
-                <p className="text-3xl font-bold text-gray-900">{dbStats.trackingEvents}</p>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{t('dashboard.trackingEvents')}</p>
+                <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 truncate">{dbStats.trackingEvents}</p>
               </div>
-              <Clock className="w-10 h-10 text-orange-600" />
+              <Clock className="w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 text-orange-600 flex-shrink-0 ml-2" />
             </div>
           </CardContent>
         </Card>
-      </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Second Row - Summary Data Cards */}
         {realSummaryData.map((item) => (
           <Card key={item.title} className="shadow-lg border-0 bg-white rounded-xl hover:shadow-xl transition-all duration-300">
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-3 sm:p-4 md:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-xs sm:text-sm font-medium text-gray-600">{item.title}</p>
-                  <p className="text-xl sm:text-2xl font-bold text-gray-900">{item.value}</p>
-                  <div className="flex items-center gap-1 mt-2">
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">{item.title}</p>
+                  <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">{item.value}</p>
+                  <div className="flex items-center gap-1 mt-1 sm:mt-2">
                     {item.isPositive ? (
-                      <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" />
+                      <span className="text-green-600 text-xs sm:text-sm">{item.change}</span>
                     ) : (
-                      <ArrowDownRight className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />
+                      <span className="text-red-600 text-xs sm:text-sm">{item.change}</span>
                     )}
-                    <span className={cn("text-xs sm:text-sm font-bold", item.isPositive ? "text-green-600" : "text-red-600")}>
-                      {item.change}
-                    </span>
-                    <span className="text-xs text-gray-400 font-medium ml-1 hidden sm:inline">{t('dashboard.thisMonth')}</span>
                   </div>
                 </div>
-                <item.icon className={cn("w-6 h-6 sm:w-8 sm:h-8", item.color)} />
+                <item.icon className={`w-6 h-6 sm:w-8 sm:h-8 ${item.color} ${item.bgColor} p-1.5 sm:p-2 rounded-lg flex-shrink-0 ml-2`} />
               </div>
             </CardContent>
           </Card>
@@ -243,22 +239,22 @@ export function Dashboard() {
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         <Card className="lg:col-span-2 shadow-sm border-gray-200/60">
-          <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">{t('dashboard.mailVolumeTrends')}</CardTitle>
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg md:text-xl">{t('dashboard.mailVolumeTrends')}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ResponsiveContainer height={250}>
+          <CardContent className="pt-0">
+            <ResponsiveContainer width="100%" height={250} minHeight="200">
               <BarChart data={realData ? realData.monthlyData : inwardOutwardData} />
             </ResponsiveContainer>
           </CardContent>
         </Card>
 
         <Card className="shadow-sm border-gray-200/60">
-          <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">{t('dashboard.statusDistribution')}</CardTitle>
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg md:text-xl">{t('dashboard.statusDistribution')}</CardTitle>
           </CardHeader>
-          <CardContent className="flex justify-center">
-            <ResponsiveContainer height={250}>
+          <CardContent className="flex justify-center pt-0">
+            <ResponsiveContainer height={200} minHeight="180">
               <PieChart data={realData ? realData.statusData : statusData} />
             </ResponsiveContainer>
           </CardContent>
@@ -267,17 +263,18 @@ export function Dashboard() {
 
       {/* Activity Feed */}
       <Card className="shadow-sm border-gray-200/60">
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-50 pb-4">
-          <CardTitle className="text-lg">{t('dashboard.recentActivity')}</CardTitle>
-          <button className="text-xs font-bold text-blue-600 hover:text-blue-700 uppercase tracking-wider">
-            {t('dashboard.fullAuditLog')}
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-gray-50 pb-3 sm:pb-4">
+          <CardTitle className="text-base sm:text-lg">{t('dashboard.recentActivity')}</CardTitle>
+          <button className="text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 uppercase tracking-wider">
+            <span className="hidden sm:inline">{t('dashboard.fullAuditLog')}</span>
+            <span className="sm:hidden">View All</span>
           </button>
         </CardHeader>
         <CardContent className="pt-2">
           <div className="divide-y divide-gray-100">
             {realData && realData.recentMails ? realData.recentMails.map((mail, i) => (
-              <div key={mail.id} className="py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between group cursor-default gap-4">
-                <div className="flex items-center gap-3 sm:gap-4">
+              <div key={mail.id} className="py-3 sm:py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between group cursor-default">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                   <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center group-hover:text-white transition-all duration-300 flex-shrink-0 ${mail.type === 'INWARD'
                     ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600'
                     : 'bg-green-50 text-green-600 group-hover:bg-green-600'
@@ -287,7 +284,12 @@ export function Dashboard() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-gray-900 truncate">{mail.subject}</p>
                     <p className="text-xs text-gray-500 font-medium">
-                      {mail.type === 'INWARD' ? `From: ${mail.senderName}` : `To: ${mail.senderName}`} • {mail.department} • Priority: {mail.priority}
+                      <span className="hidden sm:inline">
+                        {mail.type === 'INWARD' ? `From: ${mail.senderName}` : `To: ${mail.senderName}`} • {mail.department} • Priority: {mail.priority}
+                      </span>
+                      <span className="sm:hidden">
+                        {mail.type === 'INWARD' ? mail.senderName : mail.senderName} • {mail.priority}
+                      </span>
                     </p>
                   </div>
                 </div>
@@ -302,14 +304,17 @@ export function Dashboard() {
                 </div>
               </div>
             )) : [1, 2, 3].map((i) => (
-              <div key={i} className="py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center justify-between group cursor-default gap-4">
-                <div className="flex items-center gap-3 sm:gap-4">
+              <div key={i} className="py-3 sm:py-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between group cursor-default">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                   <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 flex-shrink-0">
                     <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-gray-900 truncate">Inward Mail TAP-442{i} Registered</p>
-                    <p className="text-xs text-gray-500 font-medium">Assigned to Department of Revenue • 1{i}m ago</p>
+                    <p className="text-xs text-gray-500 font-medium">
+                      <span className="hidden sm:inline">Assigned to Department of Revenue • {1}m ago</span>
+                      <span className="sm:hidden">Dept. of Revenue • {1}m ago</span>
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">

@@ -65,7 +65,7 @@ export function EditMail({ mail, onBack }: EditMailProps) {
   };
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-4 sm:p-6 bg-gray-50 min-h-screen">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <Button variant="ghost" onClick={onBack} className="p-0">
@@ -111,7 +111,7 @@ export function EditMail({ mail, onBack }: EditMailProps) {
           )}
 
           {/* Two Column Layout */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {/* Department */}
             <div>
               <label className="block text-sm font-semibold text-gray-900 mb-2">

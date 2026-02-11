@@ -122,138 +122,227 @@ export function Users() {
           fetchUsers(); // Refresh users list after creating new user
         }} />
       ) : (
-        <div className="p-8 space-y-8 bg-gray-50/30 min-h-screen">
+        <div className="p-3 sm:p-4 md:p-6 w-full max-w-full space-y-3 sm:space-y-4 md:space-y-6 bg-gray-50 min-h-screen">
           {/* Page Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{t('users.title')}</h1>
-              <p className="text-gray-500 font-medium">{t('users.subtitle')}</p>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">{t('users.title')}</h1>
+              <p className="text-gray-500 text-sm sm:text-base font-medium">{t('users.subtitle')}</p>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700 shadow-sm" onClick={() => setShowCreateForm(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              {t('users.addNewUser')}
-            </Button>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
+              <Button className="bg-blue-600 hover:bg-blue-700 shadow-sm w-full sm:w-auto" onClick={() => setShowCreateForm(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                {t('users.addNewUser')}
+              </Button>
+            </div>
           </div>
 
-          <Card className="p-6">
-            {/* Filters Toolbar */}
-            <div className="flex items-end gap-4">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <Input
-                  placeholder={t('users.searchPlaceholder')}
-                  className="pl-10"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
+          {/* Filter Section */}
+          <Card className="p-3 sm:p-4 md:p-6">
+            <div className="space-y-3 sm:space-y-4">
+              {/* Search Box - Full width on mobile */}
+              <div className="relative">
+                <label className="text-sm font-medium text-gray-700 mb-1 block">{t('common.search')}</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder={t('users.searchPlaceholder')}
+                    className="pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
               </div>
 
-              <div className="w-48">
-                <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.role')}</label>
-                <Select value={roleFilter} onValueChange={setRoleFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('users.allRoles')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('users.allRoles')}</SelectItem>
-                    <SelectItem value="Admin">{t('users.admin')}</SelectItem>
-                    <SelectItem value="HOD">{t('users.hod')}</SelectItem>
-                    <SelectItem value="Clerk">{t('users.clerk')}</SelectItem>
-                    <SelectItem value="Officer">{t('users.officer')}</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Filter Grid - Responsive layout */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.role')}</label>
+                  <Select value={roleFilter} onValueChange={setRoleFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('users.allRoles')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('users.allRoles')}</SelectItem>
+                      <SelectItem value="Admin">{t('users.admin')}</SelectItem>
+                      <SelectItem value="HOD">{t('users.hod')}</SelectItem>
+                      <SelectItem value="Clerk">{t('users.clerk')}</SelectItem>
+                      <SelectItem value="Officer">{t('users.officer')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.department')}</label>
+                  <Select value={deptFilter} onValueChange={setDeptFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('users.allDepartments')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('users.allDepartments')}</SelectItem>
+                      <SelectItem value="Administration">{t('users.administration')}</SelectItem>
+                      <SelectItem value="Finance">{t('users.finance')}</SelectItem>
+                      <SelectItem value="HR">{t('users.hr')}</SelectItem>
+                      <SelectItem value="IT">{t('users.it')}</SelectItem>
+                      <SelectItem value="Operations">{t('users.operations')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.status')}</label>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t('users.allStatus')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">{t('users.allStatus')}</SelectItem>
+                      <SelectItem value="Active">{t('users.active')}</SelectItem>
+                      <SelectItem value="Inactive">{t('users.inactive')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
-              <div className="w-48">
-                <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.department')}</label>
-                <Select value={deptFilter} onValueChange={setDeptFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('users.allDepartments')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('users.allDepartments')}</SelectItem>
-                    <SelectItem value="Administration">{t('users.administration')}</SelectItem>
-                    <SelectItem value="Finance">{t('users.finance')}</SelectItem>
-                    <SelectItem value="HR">{t('users.hr')}</SelectItem>
-                    <SelectItem value="IT">{t('users.it')}</SelectItem>
-                    <SelectItem value="Operations">{t('users.operations')}</SelectItem>
-                  </SelectContent>
-                </Select>
+              {/* Mobile Filter Actions */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2">
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setSearchTerm('');
+                    setRoleFilter('all');
+                    setDeptFilter('all');
+                    setStatusFilter('all');
+                  }}
+                  className="w-full sm:w-auto"
+                >
+                  {t('common.clear')}
+                </Button>
+                <Button 
+                  onClick={fetchUsers}
+                  className="w-full sm:w-auto"
+                >
+                  Refresh
+                </Button>
               </div>
-
-              <div className="w-48">
-                <label className="text-sm font-medium text-gray-700 mb-1 block">{t('users.status')}</label>
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder={t('users.allStatus')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">{t('users.allStatus')}</SelectItem>
-                    <SelectItem value="Active">{t('users.active')}</SelectItem>
-                    <SelectItem value="Inactive">{t('users.inactive')}</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button variant="outline" onClick={() => {
-                setSearchTerm('');
-                setRoleFilter('all');
-                setDeptFilter('all');
-                setStatusFilter('all');
-              }}>
-                {t('common.clear')}
-              </Button>
             </div>
           </Card>
 
-          <Card className="p-6 border-gray-200 shadow-sm overflow-hidden">
-            {/* User Table */}
-            <Table>
-              <TableHeader>
-                <TableRow className="hover:bg-transparent bg-gray-50/50">
-                  <TableHead className="font-bold text-gray-600">{t('users.userDetails')}</TableHead>
-                  <TableHead className="font-bold text-gray-600">{t('users.role')}</TableHead>
-                  <TableHead className="font-bold text-gray-600">{t('users.department')}</TableHead>
-                  <TableHead className="font-bold text-gray-600">{t('users.status')}</TableHead>
-                  <TableHead className="font-bold text-gray-600 text-right">{t('common.actions')}</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredUsers.length > 0 ? (
-                  filteredUsers.map((user, idx) => (
-                    <TableRow key={user.email} className="group">
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-gray-900">{user.name}</span>
-                          <span className="text-xs text-gray-500 font-medium">{user.email}</span>
+          {/* Users List */}
+          <Card className="p-4 sm:p-6 border-gray-200 shadow-sm overflow-hidden">
+            {/* Mobile View - Stacked Cards */}
+            <div className="md:hidden space-y-3 sm:space-y-4">
+              {loading ? (
+                <div className="flex items-center justify-center py-8">
+                  <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600 mr-2"></div>
+                  <span className="text-sm sm:text-base">Loading users...</span>
+                </div>
+              ) : filteredUsers.length > 0 ? (
+                filteredUsers.map((user, idx) => (
+                  <div key={user.email} className="border rounded-lg p-3 sm:p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-xs text-gray-500">{t('users.userDetails')}</span>
+                          <div className="flex flex-col">
+                            <span className="font-semibold text-gray-900 text-sm sm:text-base truncate">{user.name}</span>
+                            <span className="text-xs text-gray-500 font-medium truncate">{user.email}</span>
+                          </div>
                         </div>
-                      </TableCell>
-                      <TableCell><UserRoleBadge role={user.role} /></TableCell>
-                      <TableCell className="font-medium text-gray-600">{user.department}</TableCell>
-                      <TableCell><UserStatusBadge status={user.status} /></TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50">
-                            <Pencil className="w-4 h-4 mr-1" />
-                            {t('common.edit')}
-                          </Button>
-                          <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50">
-                            <Trash2 className="w-4 h-4 mr-1" />
-                            {t('common.delete')}
-                          </Button>
+                        <UserStatusBadge status={user.status} />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <span className="text-xs text-gray-500">{t('users.role')}</span>
+                          <UserRoleBadge role={user.role} />
                         </div>
-                      </TableCell>
+                        <div>
+                          <span className="text-xs text-gray-500">{t('users.department')}</span>
+                          <p className="font-medium text-gray-600 text-sm sm:text-base truncate">{user.department}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2 pt-2 border-t border-gray-100">
+                        <Button variant="ghost" size="sm" className="flex-1 justify-center text-blue-600 hover:bg-blue-50">
+                          <Pencil className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="hidden sm:inline ml-1 text-xs">{t('common.edit')}</span>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex-1 justify-center text-red-600 hover:bg-red-50">
+                          <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
+                          <span className="hidden sm:inline ml-1 text-xs">{t('common.delete')}</span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-400">
+                  <p className="text-sm sm:text-base">{t('users.noUsersFound')}</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Desktop View - Table */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="hover:bg-transparent bg-gray-50/50">
+                      <TableHead className="font-bold text-gray-600 min-w-[200px]">{t('users.userDetails')}</TableHead>
+                      <TableHead className="font-bold text-gray-600 min-w-[100px]">{t('users.role')}</TableHead>
+                      <TableHead className="font-bold text-gray-600 min-w-[120px]">{t('users.department')}</TableHead>
+                      <TableHead className="font-bold text-gray-600 min-w-[80px]">{t('users.status')}</TableHead>
+                      <TableHead className="font-bold text-gray-600 text-right min-w-[150px]">{t('common.actions')}</TableHead>
                     </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-32 text-center text-gray-400">
-                      {t('users.noUsersFound')}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {loading ? (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-8">
+                          <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600 mr-2"></div>
+                            <span className="text-sm sm:text-base">Loading users...</span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ) : filteredUsers.length > 0 ? (
+                      filteredUsers.map((user, idx) => (
+                        <TableRow key={user.email} className="group">
+                          <TableCell>
+                            <div className="flex flex-col">
+                              <span className="font-semibold text-gray-900 text-sm">{user.name}</span>
+                              <span className="text-xs text-gray-500 font-medium">{user.email}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell><UserRoleBadge role={user.role} /></TableCell>
+                          <TableCell className="font-medium text-gray-600 text-sm">{user.department}</TableCell>
+                          <TableCell><UserStatusBadge status={user.status} /></TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button variant="ghost" size="sm" className="text-blue-600 hover:bg-blue-50">
+                                <Pencil className="w-4 h-4 mr-1" />
+                                <span className="hidden lg:inline">{t('common.edit')}</span>
+                              </Button>
+                              <Button variant="ghost" size="sm" className="text-red-600 hover:bg-red-50">
+                                <Trash2 className="w-4 h-4 mr-1" />
+                                <span className="hidden lg:inline">{t('common.delete')}</span>
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="h-32 text-center text-gray-400">
+                          <p className="text-sm sm:text-base">{t('users.noUsersFound')}</p>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </Card>
         </div>
       )}

@@ -140,16 +140,16 @@ export default function Analytics() {
     }
 
     return (
-        <div className="p-8 space-y-8 bg-gray-50/30 min-h-screen">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8 w-full max-w-full space-y-3 sm:space-y-4 md:space-y-6 lg:space-y-8 bg-gray-50 min-h-screen">
             {/* Header Section */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-col gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900 tracking-tight">{t('analytics.title')}</h1>
-                    <p className="text-gray-500 font-medium">{t('analytics.subtitle')}</p>
+                    <h1 className="text-xl sm:text-2xl font-semibold text-gray-800">{t('analytics.title')}</h1>
+                    <p className="text-gray-500 text-sm sm:text-base font-medium mt-1">{t('analytics.subtitle')}</p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3">
                     <Select value={timeRange} onValueChange={setTimeRange}>
-                        <SelectTrigger className="w-40">
+                        <SelectTrigger className="w-full sm:w-40">
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -159,34 +159,32 @@ export default function Analytics() {
                             <SelectItem value="year">Last Year</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Badge className="bg-blue-50 text-blue-700 border-blue-100 px-3 py-1">
-                        {t('analytics.liveAnalytics')}
-                    </Badge>
-                    <Button onClick={exportReport} className="flex items-center gap-2">
+                    <Button onClick={exportReport} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors whitespace-nowrap w-full sm:w-auto">
                         <Download className="w-4 h-4" />
-                        {t('analytics.exportReport')}
+                        <span className="hidden sm:inline">{t('analytics.exportReport')}</span>
+                        <span className="sm:hidden">Export</span>
                     </Button>
                 </div>
             </div>
 
             {/* Top Metrics Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
                 {performanceMetrics.map((metric) => (
-                    <Card key={metric.title} className="shadow-sm border-gray-200/60">
-                        <CardContent className="p-4 pt-8">
+                    <Card key={metric.title} className="shadow-sm border-gray-200/60 hover:shadow-md transition-shadow duration-200">
+                        <CardContent className="p-3 sm:p-4 md:p-6">
                             <div className="flex items-center justify-between">
-                                <div className="mt-4">
-                                    <p className="text-base font-medium text-gray-600">{metric.title}</p>
-                                    <p className="text-2xl font-bold text-gray-900">{metric.value}</p>
-                                    <div className="flex items-center gap-1 mt-2">
-                                        {metric.isPositive ? <TrendingUp className="w-4 h-4 text-green-500" /> : <TrendingDown className="w-4 h-4 text-red-500" />}
-                                        <span className={cn("text-sm font-bold", metric.isPositive ? "text-green-600" : "text-red-600")}>
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm sm:text-base font-medium text-gray-600 truncate">{metric.title}</p>
+                                    <p className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 truncate">{metric.value}</p>
+                                    <div className="flex items-center gap-1 mt-1 sm:mt-2">
+                                        {metric.isPositive ? <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-500" /> : <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 text-red-500" />}
+                                        <span className={cn("text-xs sm:text-sm font-bold", metric.isPositive ? "text-green-600" : "text-red-600")}>
                                             {metric.change}
                                         </span>
                                     </div>
                                 </div>
-                                <div className={cn("w-8 h-8 rounded-full", metric.bgColor)}>
-                                    <metric.icon className={cn("w-4 h-4", metric.color)} />
+                                <div className={cn("w-6 h-6 sm:w-8 sm:h-8 rounded-full flex-shrink-0 ml-2", metric.bgColor)}>
+                                    <metric.icon className={cn("w-3 h-3 sm:w-4 sm:h-4", metric.color)} />
                                 </div>
                             </div>
                         </CardContent>
@@ -195,87 +193,121 @@ export default function Analytics() {
             </div>
 
             {/* Charts Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Mail className="w-5 h-5 text-blue-600" />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                <Card className="shadow-sm border-gray-200/60 hover:shadow-md transition-shadow duration-200">
+                    <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                            <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                             {t('analytics.monthlyMailDistribution')}
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <ResponsiveContainer height={300}>
+                    <CardContent className="pt-0">
+                        <ResponsiveContainer width="100%" height={250} minHeight="200">
                             <BarChart data={analyticsData.monthlyTrends} />
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-purple-600" />
+                <Card className="shadow-sm border-gray-200/60 hover:shadow-md transition-shadow duration-200">
+                    <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                            <Activity className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                             {t('analytics.departmentLoadEfficiency')}
                         </CardTitle>
                     </CardHeader>
-                    <CardContent className="flex justify-center">
-                        <ResponsiveContainer height={300}>
+                    <CardContent className="flex justify-center pt-0">
+                        <ResponsiveContainer height={250} minHeight="200">
                             <PieChart data={analyticsData.departmentPerformance} />
                         </ResponsiveContainer>
                     </CardContent>
                 </Card>
             </div>
 
-            {/* Efficiency Table & Trend Row */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2">
-                    <CardHeader>
-                        <CardTitle>{t('analytics.departmentPerformanceBreakdown')}</CardTitle>
+            {/* Department Performance & Processing Latency - Responsive Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                {/* Department Performance - Mobile Cards, Desktop Table */}
+                <Card className="shadow-sm border-gray-200/60 hover:shadow-md transition-shadow duration-200 lg:col-span-1">
+                    <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="text-sm sm:text-base">{t('analytics.departmentPerformanceBreakdown')}</CardTitle>
                     </CardHeader>
-                    <CardContent>
-                        <div className="space-y-6">
+                    <CardContent className="pt-0">
+                        {/* Mobile View - Cards */}
+                        <div className="md:hidden space-y-3 sm:space-y-4">
                             {analyticsData.departmentPerformance.map((dept) => (
-                                <div key={dept.name} className="group">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-2 h-8 rounded-full" style={{ backgroundColor: dept.color }} />
-                                            <div>
-                                                <p className="font-bold text-gray-900">{dept.name} Department</p>
-                                                <p className="text-xs text-gray-500">{dept.mails} items handled</p>
+                                <div key={dept.name} className="border rounded-lg p-3 sm:p-4 bg-white shadow-sm hover:shadow-md transition-shadow duration-200">
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center gap-2 sm:gap-3">
+                                                <div className="w-2 h-6 sm:h-8 rounded-full flex-shrink-0" style={{ backgroundColor: dept.color }} />
+                                                <div className="flex-1 min-w-0">
+                                                    <p className="font-bold text-sm sm:text-base text-gray-900 truncate">{dept.name} Department</p>
+                                                    <p className="text-xs text-gray-500">{dept.mails} items handled</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right flex-shrink-0">
+                                                <span className="text-lg sm:text-xl font-bold text-gray-900">{dept.value}%</span>
+                                                <p className="text-[10px] text-gray-400 font-bold uppercase">Efficiency</p>
                                             </div>
                                         </div>
-                                        <div className="text-right">
-                                            <span className="text-lg font-bold text-gray-900">{dept.value}%</span>
-                                            <p className="text-[10px] text-gray-400 font-bold uppercase">Efficiency</p>
+                                        <div className="w-full bg-gray-100 rounded-full h-2 sm:h-3 overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full transition-all duration-1000 ease-out"
+                                                style={{ width: `${dept.value}%`, backgroundColor: dept.color }}
+                                            />
                                         </div>
-                                    </div>
-                                    <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
-                                        <div
-                                            className="h-full rounded-full transition-all duration-1000 ease-out"
-                                            style={{ width: `${dept.value}%`, backgroundColor: dept.color }}
-                                        />
                                     </div>
                                 </div>
                             ))}
                         </div>
+                        
+                        {/* Desktop View - Table */}
+                        <div className="hidden md:block">
+                            <div className="space-y-4 sm:space-y-6">
+                                {analyticsData.departmentPerformance.map((dept) => (
+                                    <div key={dept.name} className="group">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-2 h-8 rounded-full" style={{ backgroundColor: dept.color }} />
+                                                <div>
+                                                    <p className="font-bold text-gray-900">{dept.name} Department</p>
+                                                    <p className="text-xs text-gray-500">{dept.mails} items handled</p>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-xl font-bold text-gray-900">{dept.value}%</span>
+                                                <p className="text-[10px] text-gray-400 font-bold uppercase">Efficiency</p>
+                                            </div>
+                                        </div>
+                                        <div className="w-full bg-gray-100 rounded-full h-3 overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full transition-all duration-1000 ease-out"
+                                                style={{ width: `${dept.value}%`, backgroundColor: dept.color }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-sm">
-                            <Clock className="w-4 h-4 text-green-600" />
+                {/* Processing Latency */}
+                <Card className="shadow-sm border-gray-200/60 hover:shadow-md transition-shadow duration-200">
+                    <CardHeader className="pb-3 sm:pb-4">
+                        <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+                            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-green-600" />
                             {t('analytics.processingLatency')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <ResponsiveContainer height={200}>
+                        <ResponsiveContainer width="100%" height={200} minHeight="180">
                             <LineChart data={analyticsData.lineData} />
                         </ResponsiveContainer>
-                        <div className="mt-6 pt-6 border-t border-gray-100">
-                            <p className="text-sm text-gray-500 leading-relaxed italic">
+                        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-100">
+                            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed italic">
                                 "Processing latency has decreased by 12% over the last quarter due to optimized department routing."
                             </p>
-                            <Button variant="link" className="px-0 mt-2 text-blue-600">
+                            <Button variant="link" className="px-0 mt-2 text-blue-600 text-sm">
                                 {t('analytics.viewFullLatencyReport')}
                             </Button>
                         </div>

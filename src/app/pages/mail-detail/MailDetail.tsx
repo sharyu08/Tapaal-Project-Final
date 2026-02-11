@@ -41,7 +41,7 @@ export function MailDetail({ mail, onBack }: MailDetailProps) {
   const senderInfo = getSenderInfo();
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50/30 min-h-screen">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gray-50/30 min-h-screen">
       {/* Header with Back Button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -76,7 +76,7 @@ export function MailDetail({ mail, onBack }: MailDetailProps) {
       {/* Details Section */}
       <Card className="p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-6">Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <div>
             <label className="text-sm text-gray-600">Subject</label>
             <div className="flex items-center gap-2 text-gray-900 font-medium mt-1">
